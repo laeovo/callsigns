@@ -4,13 +4,90 @@
         <style type="text/css">
             #callsign {
                 font-family: courier;
+                font-size: 6.0em;
             }
             </style>
         <script type="text/JavaScript">
+            var icaoCodes = ["AEE", "EIN", "AFL", "ACA", "CCA", "DLA", "AEA", "AFR", "AMC", "ANE", "BTI", "LAV", "AZA", "AEH", "AAL", "ANA", "AIZ", "AUA", "AVA", "AZO", "BRU", "BMS", "BAW", "CFG", "CAI", "CXI", "CTN", "DAL", "EZY", "EJU", "MSR", "ELY", "UAE", "ENT", "ETD", "EWG", "FIN", "FHY", "FHM", "HES", "IBE", "ICE", "ISR", "KLM", "KAC", "LDM", "LOT", "DLH", "LGL", "NMA", "NAX", "IBK", "OMA", "OHY", "OTF", "PGT", "QTR", "RAM", "RJA", "RYR", "SBI", "SAS", "SVA", "SIA", "SAA", "SDR", "SXS", "SWR", "TAP", "ROT", "THA", "TUI", "TAR", "THY", "AUI", "UAL", "SVR", "UTA", "VOE", "VLG", "WIF"];
             
+            var buchstaben = ["A", "B", "C", "D", "E", "F", "G", "H", "J", "I", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+            
+            var ziffern = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+            
+            function randomIcaoCode() {
+                return icaoCodes[Math.floor(Math.random() * icaoCodes.length)];
+            }
+            
+            function randomBuchstabe() {
+                return buchstaben[Math.floor(Math.random() * buchstaben.length)];
+            }
+            
+            function randomZiffer() {
+                return ziffern[Math.floor(Math.random() * ziffern.length)];
+            }
+            
+            function neuesCallsign() {
+                const callsignOderRegistrationThr = 0.95; // Anteil der Callsigns; Anteil der Registrations = 1 - (...)
+                const callsignOderRegistration = Math.random();
+                var callsign = "";
+                if (callsignOderRegistration < callsignOderRegistrationThr) {
+                    // Callsign
+                    callsign = randomIcaoCode();
+                    const anzahlZiffern = Math.ceil(Math.random() * 4);
+                    for (var i = 0; i < anzahlZiffern; ++i) {
+                        var neueZiffer = randomZiffer();
+                        while (i == 0 && neueZiffer == 0) {
+                            neueZiffer = randomZiffer();
+                        }
+                        callsign += neueZiffer;
+                    }
+                    var minAnzahlBuchstaben = 0;
+                    if (anzahlZiffern <= 2) {
+                        minAnzahlBuchstaben = 1;
+                    }
+                    var maxAnzahlBuchstaben = 2;
+                    if (anzahlZiffern >= 3) {
+                        maxAnzahlBuchstaben = 1;
+                    }
+                    if (anzahlZiffern == 4) {
+                        maxAnzahlBuchstaben = 0;
+                    }
+                    const anzahlBuchstaben = Math.round(Math.random() * (maxAnzahlBuchstaben - minAnzahlBuchstaben) + minAnzahlBuchstaben);
+                    for (var i = 0; i < anzahlBuchstaben; ++i) {
+                        callsign += randomBuchstabe();
+                    }
+                }
+                else {
+                    // Registration
+                    callsign = "";
+                    if (Math.random() < 0.8) {
+                        // Lufthansa-Registration
+                        callsign += "DA";
+                        for (var i = 0; i < 3; ++i) {
+                            callsign += randomBuchstabe();
+                        }
+                    }
+                    else {
+                        const anteilBuchstaben = 0.9;
+                        for (var i = 0; i < 5; ++i) {
+                            const buchstabeOderZiffer = Math.random();
+                            if (buchstabeOderZiffer < anteilBuchstaben) {
+                                // Buchstabe
+                                callsign += randomBuchstabe();
+                            }
+                            else {
+                                callsign += randomZiffer();
+                            }
+                        }
+                    }
+                }
+                window.document.getElementById("callsign").innerHTML = callsign;
+            }
+
             </script>
         </head>
     <body onload="neuesCallsign()">
         <p id="callsign"></p>
+        <input type="submit" onclick="neuesCallsign()" value="Neues Callsign" />
         </body>
     </html>
