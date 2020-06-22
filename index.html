@@ -5,6 +5,10 @@
             #callsign {
                 font-family: courier;
                 font-size: 6.0em;
+                position: absolute;
+                top: 40vh;
+                left: 50vw;
+                transform: translate(-50%, -100%);
             }
             </style>
         <script type="text/JavaScript">
@@ -86,8 +90,7 @@
 
             </script>
         </head>
-    <body onload="neuesCallsign()">
+    <body onload="neuesCallsign()" onclick="neuesCallsign()" align="center" valign="center">
         <p id="callsign"></p>
-        <input type="submit" onclick="neuesCallsign()" value="Neues Callsign" />
         </body>
     </html>
